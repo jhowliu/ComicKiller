@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "Comic Killer",
+  "description": "Read comic more confortable and convience.",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "https://*/", "tabs"
+  ],
+  "content_scripts": [ 
+    {
+        "matches": ["http://comic.sfacg.com/HTML/*/*"],
+        "js": ["js/jquery-1.11.1.min.js", "js/sfacg.js"],
+        "run_at": "document_start"
+    }, 
+    {
+        "matches": ["http://www.8comic.com/show/*", "http://new.comicvip.com/show/*"],
+        "js": ["js/jquery-1.11.1.min.js", "js/8comic.js"],
+        "run_at": "document_end"
+    }
+  ]
+}
