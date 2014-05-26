@@ -1,5 +1,5 @@
 var firstPage = location.origin + location.pathname + location.search;
-
+var listener = new Object();
 var calPictureURL = function (cs, ch, host, callback) {
 		var pagenum, patten, ans, c;
 		host = host + '/' + ch;
@@ -54,11 +54,29 @@ var processing = function (callback) {
 };
 
 processing(function(ch, pic, nextVolURL, host){
-	$('html').html('<head></head><title></title></head><body><div id="scrollTester"></div></body>');
+	$('html').html('<!DOCTYPE HTML><head></head><title></title></head><body></body>');
 
 	for (var i = 0; i != pic.length; i++)
-		$('body').append("<div><img src='" + pic[i] + "'></div");
+		$('body').append("<div><img src='" + pic[i] + "'></div>");
 
+	window.addEventListener('scroll', function() { 
+		console.log(window.innerHeight + 1 + $(window).scrollTop());
+		$(window).scroll(function() {
+   			if(window.innerHeight + $(window).scrollTop() + 1 == $(document).height()) {
+    	   		 alert("bottom!");
+    	   		 loadNext(nextVolURL, host, ch, function(nextURL, nextCh, pics) {
+    	   		 	 nextVolURL = nextURL;
+    	   		 	 ch = nextCh;
+    	   		 	 for (var i = 0; i != pics.length; i++) 
+    	   		 	 	 $('body').append("<div><img src='" + pics[i] + "'></div>");
+    	   		 });
+   			}
+   		}); 
+	},
+	false);
+});
+
+var loadNext = function(nextVolURL, host, ch, callback) {
 	$.get(nextVolURL, function(data) {
 		var picAy, something, mapping = {}, target, pagenum, curHost;
 		ch++;
@@ -75,11 +93,9 @@ processing(function(ch, pic, nextVolURL, host){
 			mapping[something[index].split("=")[0]] = something[index].split("=")[1];
 		
 		calPictureURL(mapping.cs, ch, host, function(pics) {
-			console.log(pics);
-			for (var i = 0; i != pics.length; i++)
-				$('body').append("<div><img src='" + pics[i] + "'></div");
+			callback(nextVolURL, ch, pics);
 		});
 
-	}); 
-});
 
+	}); 
+}
