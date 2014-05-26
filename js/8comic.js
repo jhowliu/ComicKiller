@@ -18,7 +18,6 @@ var calPictureURL = function (cs, callback) {
 		if (c == "") 
 			c = (cs.substring(cs.length - 50, cs.length)).replace(/[a-z]*/g, "");
 
-		console.log(c);
 		pagenum = c.substring(7, 10).replace(/[a-z]*/gi, "");
 		var picAy = new Array(pagenum);
 		for(var p = 1; p <= pagenum; p++) {
@@ -47,7 +46,7 @@ var processing = function (callback) {
 			mapping[something[index].split("=")[0]] = something[index].split("=")[1];
 		
 		var picAy, patten, ans, c;
-
+		console.log(c);
 		calPictureURL(mapping.cs, function(pics) {
 			picAy = pics;
 		});
@@ -58,21 +57,20 @@ var processing = function (callback) {
 
 
 var loadNext = function(callback) {
-    console.log(nextVolURL);
 	$.get(nextVolURL, function(data) {
         var picAy, something, mapping = {}, target, pagenum, curHost;
         ch++;
 		curHost += ch + "/";
 		nextVolURL = nextVolURL.replace(nextVolURL.match(/=([0-9]+)/)[1], ch);
 		target = data.search("var chs");
-		ata = data.substring(target, data.length);
+		data = data.substring(target, data.length);
 		target = data.search("</script>");
 		data = data.substring(0, target).replace(/var/g, "").replace(/[ \']/g, "").replace(/eval.*/, "");
 		something = data.split(";");
 	    
 		for (var index in something) 
 			mapping[something[index].split("=")[0]] = something[index].split("=")[1];
-	    console.log(mapping.cs);	
+	
 		calPictureURL(mapping.cs, function(pics) {
 			callback(pics);
 		});
@@ -94,10 +92,8 @@ $(document).ready(function() {
             $(window).scroll(function() {
                 if(window.innerHeight + $(window).scrollTop() + 50 >= $(document).height() && !loading) {
                     loading = true;
-                    console.log("NewURL:" + nextVolURL);
+                    console.log("NewURL:" + nextVolURL + ", Chapter:" + ch);
                     loadNext(function(pics) {
-                        nextVolURL = nextURL;
-                        ch = nextCh;
                         for (var i = 0; i != pics.length; i++)
                             $('body').append("<div><img src='" + pics[i] + "'></img></div>");
                         loading = false;      
