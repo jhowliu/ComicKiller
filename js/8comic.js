@@ -18,7 +18,10 @@ var calPictureURL = function (cs, callback) {
 		if (c == "") 
 			c = (cs.substring(cs.length - 50, cs.length)).replace(/[a-z]*/g, "");
 
+		console.log(c);
 		pagenum = c.substring(7, 10).replace(/[a-z]*/gi, "");
+		curHost = curHost.replace(/[0-9]+/, c.substring(4, 6).replace(/[a-z]*/g, "")).replace(/\/[0-9]+\//, "/" + c.substring(6, 7).replace(/[a-z]*/g, "") + "/");
+
 		var picAy = new Array(pagenum);
 		for(var p = 1; p <= pagenum; p++) {
 			ans = (parseInt((p - 1) / 10) % 10) + (((p - 1) % 10) * 3);
@@ -45,8 +48,8 @@ var processing = function (callback) {
 		for (var index in something) 
 			mapping[something[index].split("=")[0]] = something[index].split("=")[1];
 		
-		var picAy, patten, ans, c;
-		console.log(c);
+		var picAy;
+		
 		calPictureURL(mapping.cs, function(pics) {
 			picAy = pics;
 		});
@@ -74,8 +77,6 @@ var loadNext = function(callback) {
 		calPictureURL(mapping.cs, function(pics) {
 			callback(pics);
 		});
-
-
 	}); 
 }
 
