@@ -90,7 +90,7 @@ $(document).ready(function() {
                             + ", Document height: " + $(document).height());
             console.log(loading);
             $(window).scroll(function() {
-                if(window.innerHeight + $(window).scrollTop() + 50 >= $(document).height() && !loading) {
+                if(window.innerHeight + $(window).scrollTop() + 5000 >= $(document).height() && !loading) {
                     loading = true;
                     console.log("NewURL:" + nextVolURL + ", Chapter:" + ch);
                     loadNext(function(pics) {
