@@ -37,7 +37,9 @@ var processing = function (callback) {
 	$.get(firstPage, function(res) {
 		var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol;
 		thePic = $('#TheImg')[0].src;
-		startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/); ch = location.search.match(/[0-9]+$/); host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
+		startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/); 
+        ch = location.search.match(/[0-9]+$/); 
+        host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
 		preVolURL = location.origin + location.pathname + "?ch=" + $('#prevname')[0].innerText.replace(/[ \[\]]/g, "");
 		nextVolURL = location.origin + location.pathname + "?ch=" + $('#nextname')[0].innerText.replace(/[ \[\]]/g, "");
 		something = $('#Form1 > script').text().replace(/var/g, "").replace(/[ \']/g, "").replace(/eval.*/, "");
