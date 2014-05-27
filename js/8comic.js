@@ -4,41 +4,41 @@ var listener = new Object();
 var loading = false;
 
 var calPictureURL = function (cs, callback) {
-		var pagenum, patten, ans, c, curHost;
-		curHost = host + '/' + ch;
-		c = "";
+	var pagenum, patten, ans, c, curHost;
+	curHost = host + '/' + ch;
+	c = "";
 
-		for (var index = 0; index <= cs.length/50; index++) {
-			if ((cs.substring(index * 50, index * 50 + 4)).replace(/[a-z]*/g, "") ==  ch) {
-				c = cs.substring(index * 50, index * 50 + 50);
-				break;
-			}
+	for (var index = 0; index <= cs.length/50; index++) {
+		if ((cs.substring(index * 50, index * 50 + 4)).replace(/[a-z]*/g, "") ==  ch) {
+			c = cs.substring(index * 50, index * 50 + 50);
+			break;
 		}
+	}
 
-		if (c == "") 
-			c = (cs.substring(cs.length - 50, cs.length)).replace(/[a-z]*/g, "");
+	if (c == "") 
+		c = (cs.substring(cs.length - 50, cs.length)).replace(/[a-z]*/g, "");
 
-		console.log(c);
-		pagenum = c.substring(7, 10).replace(/[a-z]*/gi, "");
-		curHost = curHost.replace(/[0-9]+/, c.substring(4, 6).replace(/[a-z]*/g, "")).replace(/\/[0-9]+\//, "/" + c.substring(6, 7).replace(/[a-z]*/g, "") + "/");
+	console.log(c);
+	pagenum = c.substring(7, 10).replace(/[a-z]*/gi, "");
+	curHost = curHost.replace(/[0-9]+/, c.substring(4, 6).replace(/[a-z]*/g, "")).replace(/\/[0-9]+\//, "/" + c.substring(6, 7).replace(/[a-z]*/g, "") + "/");
 
-		var picAy = new Array(pagenum);
-		for(var p = 1; p <= pagenum; p++) {
-			ans = (parseInt((p - 1) / 10) % 10) + (((p - 1) % 10) * 3);
-			patten = c.substring(ans + 10, ans + 13);
-			var tmpURL = curHost + "/" + (p < 10 ? "00" + p : p < 100 ? "0" + p : p) + "_" + patten + ".jpg";
-			picAy[p-1] = tmpURL;
-		}
+	var picAy = new Array(pagenum);
+	for(var p = 1; p <= pagenum; p++) {
+		ans = (parseInt((p - 1) / 10) % 10) + (((p - 1) % 10) * 3);
+		patten = c.substring(ans + 10, ans + 13);
+		var tmpURL = curHost + "/" + (p < 10 ? "00" + p : p < 100 ? "0" + p : p) + "_" + patten + ".jpg";
+		picAy[p-1] = tmpURL;
+	}
 
-		callback(picAy);
+	callback(picAy);
 }
 
 var processing = function (callback) {
 	$.get(firstPage, function(res) {
-		var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol;
-		thePic = $('#TheImg')[0].src;
-		startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/); 
-        ch = location.search.match(/[0-9]+$/); 
+    	var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol;
+	    thePic = $('#TheImg')[0].src;
+    	startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/);
+        ch = location.search.match(/[0-9]+$/);
         host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
 		preVolURL = location.origin + location.pathname + "?ch=" + $('#prevname')[0].innerText.replace(/[ \[\]]/g, "");
 		nextVolURL = location.origin + location.pathname + "?ch=" + $('#nextname')[0].innerText.replace(/[ \[\]]/g, "");
