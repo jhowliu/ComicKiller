@@ -37,9 +37,7 @@ var processing = function (callback) {
 	$.get(firstPage, function(res) {
 		var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol;
 		thePic = $('#TheImg')[0].src;
-		startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/);
-		ch = location.search.match(/[0-9]+$/);
-		host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
+		startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/); ch = location.search.match(/[0-9]+$/); host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
 		preVolURL = location.origin + location.pathname + "?ch=" + $('#prevname')[0].innerText.replace(/[ \[\]]/g, "");
 		nextVolURL = location.origin + location.pathname + "?ch=" + $('#nextname')[0].innerText.replace(/[ \[\]]/g, "");
 		something = $('#Form1 > script').text().replace(/var/g, "").replace(/[ \']/g, "").replace(/eval.*/, "");
@@ -80,28 +78,26 @@ var loadNext = function(callback) {
 	}); 
 }
 
-$(document).ready(function() {
-    processing(function(pic) {
-        $('html').html('<head><title></title></head><body></body>');
-        for (var i = 0; i != pic.length; i++)
-            $('body').append("<div><img src='" + pic[i] + "'></img></div>");
+processing(function(pic) {
+    $('html').html('<head><title></title></head><body></body>');
+    for (var i = 0; i != pic.length; i++)
+        $('body').append("<div><img src='" + pic[i] + "'></img></div>");
 
-        window.addEventListener('scroll', function() { 
-            console.log("Window height: " + window.innerHeight + ", ScrollBar height: " + $(window).scrollTop() 
-                            + ", Document height: " + $(document).height());
-            console.log(loading);
-            $(window).scroll(function() {
-                if(window.innerHeight + $(window).scrollTop() + 5000 >= $(document).height() && !loading) {
-                    loading = true;
-                    console.log("NewURL:" + nextVolURL + ", Chapter:" + ch);
-                    loadNext(function(pics) {
-                        for (var i = 0; i != pics.length; i++)
-                            $('body').append("<div><img src='" + pics[i] + "'></img></div>");
-                        loading = false;      
-                    });
-                }
-            }); 
-        }, false);
-    });
+    window.addEventListener('scroll', function() { 
+        console.log("Window height: " + window.innerHeight + ", ScrollBar height: " + $(window).scrollTop() 
+                        + ", Document height: " + $(document).height());
+        console.log(loading);
+        $(window).scroll(function() {
+            if(window.innerHeight + $(window).scrollTop() + 5000 >= $(document).height() && !loading) {
+                loading = true;
+                console.log("NewURL:" + nextVolURL + ", Chapter:" + ch);
+                loadNext(function(pics) {
+                    for (var i = 0; i != pics.length; i++)
+                        $('body').append("<div><img src='" + pics[i] + "'></img></div>");
+                    loading = false;      
+                });
+            }
+        }); 
+    }, false);
 });
-    
+
