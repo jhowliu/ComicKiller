@@ -35,7 +35,9 @@ var calPictureURL = function (cs, callback) {
 
 var processing = function (callback) {
     $.get(firstPage, function(res) {
-        var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol;
+        var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol, lastVol;
+        lastVol = $('#lastvol > b').text();
+        console.log(lastvol);
         thePic = $('#TheImg')[0].src;
         startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/);
         ch = location.search.match(/[0-9]+$/);
@@ -64,7 +66,8 @@ var loadNext = function(callback) {
         var picAy, something, mapping = {}, target, pagenum, curHost;
         ch++;
         curHost += ch + "/";
-        nextVolURL = nextVolURL.replace(nextVolURL.match(/=([0-9]+)/)[1], ch);
+        nextVolURL = nextVolURL.replace(/[0-9]+$/, ch);
+        console.log(nextVolURL);
         target = data.search("var chs");
         data = data.substring(target, data.length);
         target = data.search("</script>");
@@ -83,7 +86,7 @@ var loadNext = function(callback) {
 processing(function(pic) {
     $('html').html('<head><title></title></head><body></body>');
     for (var i = 0; i != pic.length; i++)
-       $('body').append("<div><img src='" + pic[i] + "'></img></div>");
+       $('body').append("<div class='eox-page'><img src='" + pic[i] + "'></img></div>");
 
     window.addEventListener('scroll', function() { 
         console.log("Window height: " + window.innerHeight + ", ScrollBar height: " + $(window).scrollTop() 
@@ -95,7 +98,7 @@ processing(function(pic) {
                 console.log("NewURL:" + nextVolURL + ", Chapter:" + ch);
                 loadNext(function(pics) {
                     for (var i = 0; i != pics.length; i++)
-                        $('body').append("<div><img src='" + pics[i] + "'></img></div>");
+                        $('body').append("<div class='eox-page'><img src='" + pics[i] + "'></img></div>");
                     loading = false;      
                 });
             }

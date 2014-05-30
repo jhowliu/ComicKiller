@@ -16,11 +16,13 @@
     {
         "matches": ["http://comic.sfacg.com/HTML/*/*"],
         "js": ["js/jquery-1.11.1.min.js", "js/sfacg.js"],
-        "run_at": "document_start"
+        "css": ["css/view.css"],
+        "run_at": "document_end"
     }, 
     {
         "matches": ["http://www.8comic.com/show/*", "http://new.comicvip.com/show/*"],
         "js": ["js/jquery-1.11.1.min.js", "js/8comic.js"],
+        "css": ["css/view.css"],
         "run_at": "document_end"
     }
   ]
