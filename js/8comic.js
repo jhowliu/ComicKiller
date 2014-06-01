@@ -7,7 +7,6 @@ var user_data;
 
 var updateEvent = function(obj) {
     chrome.extension.sendMessage({
-        action: 'LikeEvent',
         obj: obj
     }, function (res) {
         console.log(res);    
@@ -69,7 +68,7 @@ var processing = function (callback) {
             title : title,
             site : '8comic'
         }
-        console.log("Send Message.");
+        console.log("Update user's comic info.");
         updateEvent(user_data);   
         for (var index in something) 
             mapping[something[index].split("=")[0]] = something[index].split("=")[1];
@@ -92,6 +91,8 @@ var loadNext = function(callback) {
         nextCh = ch + 1; 
         user_data['currentVol'] = ch; 
         user_data['currentVolURL'] = nextVolURL; 
+        console.log("Update user's comic info.");
+        updateEvent(user_data);   
         nextVolURL = nextVolURL.replace(/[0-9]+$/, nextCh);
         target = data.search("var chs");
         data = data.substring(target, data.length);
@@ -133,5 +134,3 @@ processing(function(pic) {
         }, false);
     }, 1000);
 });
-
-

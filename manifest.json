@@ -28,6 +28,11 @@
         "js": ["js/jquery-1.11.1.min.js", "js/8comic.js"],
         "css": ["css/view.css"],
         "run_at": "document_end"
+    },
+    {
+        "matches": [ "http://tel.dm5.com/m*/" ],
+        "css": ["css/view.css"],
+        "run_at": "document_end"
     }
   ]
 }
