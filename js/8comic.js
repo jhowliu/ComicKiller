@@ -2,6 +2,17 @@ var firstPage = location.origin + location.pathname + location.search;
 var nextVolURL, ch, host;
 var listener = new Object();
 var loading = false;
+var user_data;
+
+
+var updateEvent = function(obj) {
+    chrome.extension.sendMessage({
+        action: 'LikeEvent',
+        obj: obj
+    }, function (res) {
+        console.log(res);    
+    });
+}
 
 var calPictureURL = function (cs, callback) {
     var pagenum, patten, ans, c, curHost;
@@ -35,18 +46,31 @@ var calPictureURL = function (cs, callback) {
 
 var processing = function (callback) {
     $.get(firstPage, function(res) {
-        var preVolURLL, picCount, something, mapping = {}, thePic, startSymbol, lastVol;
-        lastVol = $('#lastvol > b').text();
-        console.log(lastvol);
+        var preVolURL, picCount, something, mapping = {}, thePic, startSymbol, lastVol, lastVolURL, currentVol, currentVolURL, title;
+        title = $('title')[0].innerText;
+        lastVol = title.match(/-[ ]*([0-9]+)/)[1];
+        title = title.match(/[^\x00-\x7F]+/)[0];
         thePic = $('#TheImg')[0].src;
         startSymbol = thePic.match(/[0-9]*_([a-z0-9]*).jpg$/);
-        ch = location.search.match(/[0-9]+$/);
+        ch = location.search.match(/[0-9]+$/)[0];
+        currentVol = parseInt(ch);
         host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
+        currentVolURL = location.origin + location.patten + "?ch=" + currentVol;
+        lastVolURL = location.origin + location.pathname + "?ch=" + lastVol;
         preVolURL = location.origin + location.pathname + "?ch=" + $('#prevname')[0].innerText.replace(/[ \[\]]/g, "");
         nextVolURL = location.origin + location.pathname + "?ch=" + $('#nextname')[0].innerText.replace(/[ \[\]]/g, "");
         something = $('#Form1 > script').text().replace(/var/g, "").replace(/[ \']/g, "").replace(/eval.*/, "");
         something = something.split(";");
-		
+        user_data = {
+            lastVol : lastVol,
+            lastVolURL : lastVolURL, 
+            currentVol : currentVol,
+            currentVolURL : currentVolURL,
+            title : title,
+            site : '8comic'
+        }
+        console.log("Send Message.");
+        updateEvent(user_data);   
         for (var index in something) 
             mapping[something[index].split("=")[0]] = something[index].split("=")[1];
 		
@@ -55,7 +79,6 @@ var processing = function (callback) {
         calPictureURL(mapping.cs, function(pics) {
             picAy = pics;
         });
-		
         callback(picAy); 
     });
 };
@@ -63,17 +86,19 @@ var processing = function (callback) {
 
 var loadNext = function(callback) {
     $.get(nextVolURL, function(data) {
-        var picAy, something, mapping = {}, target, pagenum, curHost;
-        ch++;
-        curHost += ch + "/";
-        nextVolURL = nextVolURL.replace(/[0-9]+$/, ch);
-        console.log(nextVolURL);
+        var picAy, something, mapping = {}, target, pagenum, curHost, nextCh;
+        // Update my comic informations.
+        ch = parseInt(ch) + 1;
+        nextCh = ch + 1; 
+        user_data['currentVol'] = ch; 
+        user_data['currentVolURL'] = nextVolURL; 
+        nextVolURL = nextVolURL.replace(/[0-9]+$/, nextCh);
         target = data.search("var chs");
         data = data.substring(target, data.length);
         target = data.search("</script>");
         data = data.substring(0, target).replace(/var/g, "").replace(/[ \']/g, "").replace(/eval.*/, "");
         something = data.split(";");
-	    
+	     
         for (var index in something) 
             mapping[something[index].split("=")[0]] = something[index].split("=")[1];
 	
@@ -87,22 +112,26 @@ processing(function(pic) {
     $('html').html('<head><title></title></head><body></body>');
     for (var i = 0; i != pic.length; i++)
        $('body').append("<div class='eox-page'><img src='" + pic[i] + "'></img></div>");
-
-    window.addEventListener('scroll', function() { 
-        console.log("Window height: " + window.innerHeight + ", ScrollBar height: " + $(window).scrollTop() 
-                        + ", Document height: " + $(document).height());
-        console.log(loading);
-        $(window).scroll(function() {
-            if(window.innerHeight + $(window).scrollTop() + 5000 >= $(document).height() && !loading) {
-                loading = true;
-                console.log("NewURL:" + nextVolURL + ", Chapter:" + ch);
-                loadNext(function(pics) {
-                    for (var i = 0; i != pics.length; i++)
+    setTimeout(function() {
+        window.addEventListener('scroll', function() { 
+            console.log("Window height: " + window.innerHeight + ", ScrollBar height: " + $(window).scrollTop() 
+                + ", Document height: " + $(document).height());
+            console.log(loading);
+            $(window).scroll(function() {
+                if(window.innerHeight + $(window).scrollTop() + 5000 >= $(document).height() && !loading && parseInt(ch)+1 <= parseInt(user_data['lastVol'])) {
+                    loading = true;
+                    console.log("NewURL:" + nextVolURL + ", Current Chapter:" + ch);
+                    loadNext(function(pics) {
+                        for (var i = 0; i != pics.length; i++)
                         $('body').append("<div class='eox-page'><img src='" + pics[i] + "'></img></div>");
-                    loading = false;      
-                });
-            }
-        }); 
-    }, false);
+                    setTimeout(function() {
+                        loading = false;      
+                    }, 1000);
+                    });
+                }
+            }); 
+        }, false);
+    }, 1000);
 });
+
 
