@@ -4,9 +4,9 @@ var listener = new Object();
 var loading = false;
 var user_data;
 
-
 var updateEvent = function(obj) {
     chrome.extension.sendMessage({
+        action: "updateCurrentVol",
         obj: obj
     }, function (res) {
         console.log(res);    
@@ -45,7 +45,8 @@ var calPictureURL = function (cs, callback) {
 
 var processing = function (callback) {
     $.get(firstPage, function(res) {
-        var preVolURL, picCount, something, mapping = {}, thePic, startSymbol, lastVol, lastVolURL, currentVol, currentVolURL, title;
+        var preVolURL, picCount, something, mapping = {}, thePic, startSymbol, lastVol, lastVolURL, currentVol, currentVolURL, title, coverImgURL;
+        coverImgURL = "http://www.8comic.com/pics/0/" + location.href.match(/([0-9]+).html/)[1] + ".jpg";
         title = $('title')[0].innerText;
         lastVol = title.match(/-[ ]*([0-9]+)/)[1];
         title = title.match(/[^\x00-\x7F]+/)[0];
@@ -54,7 +55,7 @@ var processing = function (callback) {
         ch = location.search.match(/[0-9]+$/)[0];
         currentVol = parseInt(ch);
         host = thePic.replace(startSymbol[0], "").replace(/\/[0-9]+\/$/, "");
-        currentVolURL = location.origin + location.patten + "?ch=" + currentVol;
+        currentVolURL = location.origin + location.pathname + "?ch=" + currentVol;
         lastVolURL = location.origin + location.pathname + "?ch=" + lastVol;
         preVolURL = location.origin + location.pathname + "?ch=" + $('#prevname')[0].innerText.replace(/[ \[\]]/g, "");
         nextVolURL = location.origin + location.pathname + "?ch=" + $('#nextname')[0].innerText.replace(/[ \[\]]/g, "");
@@ -65,10 +66,12 @@ var processing = function (callback) {
             lastVolURL : lastVolURL, 
             currentVol : currentVol,
             currentVolURL : currentVolURL,
+            coverImgURL: coverImgURL,
             title : title,
             site : '8comic'
         }
         console.log("Update user's comic info.");
+        console.log(user_data);
         updateEvent(user_data);   
         for (var index in something) 
             mapping[something[index].split("=")[0]] = something[index].split("=")[1];

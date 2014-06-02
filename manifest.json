@@ -14,7 +14,7 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "https://*/", "tabs"
+    "https://*/", "tabs", "alarms"
   ],
   "content_scripts": [ 
     {
