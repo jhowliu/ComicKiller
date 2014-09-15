@@ -1,3 +1,3 @@
 ComicKiller
 ===========
-Only Support 8Comic
+Support 8Comic
