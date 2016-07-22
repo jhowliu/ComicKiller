@@ -1,0 +1,37 @@
+body {
+    min-width:300px;
+}
+
+img {
+    max-width:80px;
+    height:inherit;
+}
+
+.remainder li {
+    list-style-type:none;
+}
+
+h4 {
+    font-family:Georgia, serif;
+    font-size:16px;
+    color:#4E443C;
+    font-variant:small-caps;
+    text-transform:none;
+    font-weight:100;
+    margin-bottom:0;
+}
+
+h1 {
+    font-family:georgia, serif;
+    color:#444;
+    margin:0;
+    padding:0px 0px 6px 0px;
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -2px;
+    font-weight: bold;
+}
+
+h4:hover{
+    color:red; 
+}

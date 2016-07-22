@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+
+  "name": "Comic Killer",
+  "description": "Read comic more confortable and convience.",
+  "version": "1.0",
+    
+  "background": {
+    "persistent": false,
+    "scripts": ["js/jquery-1.11.1.min.js", "js/background.js"]
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "https://*/", "tabs", "alarms"
+  ],
+  "content_scripts": [ 
+    {
+        "matches": ["http://comic.sfacg.com/HTML/*/*"],
+        "js": ["js/jquery-1.11.1.min.js", "js/sfacg.js"],
+        "css": ["css/view.css"],
+        "run_at": "document_end"
+    }, 
+    {
+        "matches": ["http://www.8comic.com/show/*", "http://v.comicbus.com/online/*"],
+        "js": ["js/jquery-1.11.1.min.js", "js/8comic.js"],
+        "css": ["css/view.css"],
+        "run_at": "document_end"
+    },
+    {
+        "matches": [ "http://tel.dm5.com/m*/" ],
+        "css": ["css/view.css"],
+        "run_at": "document_end"
+    }
+  ]
+}
