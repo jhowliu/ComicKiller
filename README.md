@@ -9,4 +9,4 @@ ComicKiller (Google Chrome Extension)
 
 ## Demo
 
-(Link)[https://www.youtube.com/watch?v=esRYncejQ14]
+[Link](https://www.youtube.com/watch?v=esRYncejQ14)
